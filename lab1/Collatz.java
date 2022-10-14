@@ -42,13 +42,12 @@ public class Collatz {
             n = nextNumber(n);
             if(n == 1)
             {
+                collatz.add(n);
                 terminate = 0;
             }
 
         }
-        n = nextNumber(n);
-
-            System.out.println(n + " ");
+        
             System.out.println(Arrays.toString(collatz.toArray()));
 
 
