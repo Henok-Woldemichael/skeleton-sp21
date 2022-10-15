@@ -29,7 +29,8 @@ public class Collatz {
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         int n = 5;
         int terminate = 1;
         List<Integer> collatz = new ArrayList<>();
@@ -47,8 +48,8 @@ public class Collatz {
             }
 
         }
-        
-            System.out.println(Arrays.toString(collatz.toArray()));
+        collatz.forEach(result -> System.out.print(result + " "));
+
 
 
 
