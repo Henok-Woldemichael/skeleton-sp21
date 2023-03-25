@@ -11,6 +11,8 @@ public class Model extends Observable {
     /** Current contents of the board. */
     private Board board;
     /** Current score. */
+
+
     private int score;
     /** Maximum score so far.  Updated when game ends. */
     private int maxScore;
@@ -109,17 +111,82 @@ public class Model extends Observable {
     public boolean tilt(Side side) {
         boolean changed;
         changed = false;
+        int emptyTileCount =0;
+        //Tile lastSavedTile = null; CANNOT HAVE lastSavedTile be null because I'm checking the value
+        Tile lastSavedTile = Tile.create(10,0,0);
+        Tile h = lastSavedTile;
+        int scoreTracker = this.score();
+        this.board.setViewingPerspective(side);
 
-        // TODO: Modify this.board (and perhaps this.score) to account
-        // for the tilt to the Side SIDE. If the board changed, set the
-        // changed local variable to true.
+        for (int i = 0; i < this.board.size(); i++) {
+            //keeping track of rows
+            emptyTileCount = 0;
+            lastSavedTile = Tile.create(10,0,0);
+            for (int j = this.size() - 1; j >= 0; j--)
+            {
+                if (this.board.tile(i, j) == null)
+                {
+                    emptyTileCount += 1;
+                }
+                else if(this.tile(i,j) != null)  {
 
-        checkGameOver();
-        if (changed) {
-            setChanged();
-        }
+
+                    if (this.tile(i, j).value() == lastSavedTile.value())
+                    {
+                        this.score += this.tile(i,j).value()*2;
+                        scoreTracker += this.tile(i,j).value();
+                        this.board.move(lastSavedTile.col(), lastSavedTile.row(), this.board.tile(i, j));
+                        changed = true;
+                        emptyTileCount += 1;
+                        lastSavedTile = h;
+
+                    }
+
+                    else
+                    {
+                        lastSavedTile = Tile.create(this.board.tile(i,j).value(),i,j);
+                        if (emptyTileCount > 0) {
+                            this.board.move(i, j + emptyTileCount, this.tile(i, j));
+                            lastSavedTile = Tile.create(this.board.tile(i,j+emptyTileCount).value(),i,j+emptyTileCount);
+                            changed = true;
+
+                        }
+                    }
+
+
+
+                }
+
+
+                    }
+
+                }
+        this.board.setViewingPerspective(Side.NORTH);
         return changed;
-    }
+            }
+
+
+
+/*
+                    if (this.board.tile(i, j - 1) != null)
+                    {
+                        if (this.board.tile(i, j - 1).value() == this.board.tile(i, j).value())
+                        {
+                            this.board.move(i, j, this.board.tile(i, j-1));
+                            this.score += this.board.tile(i, j).value();
+                            changed = true;
+                        }
+                    }
+                    if (this.board.tile(i, j - 1) == null)
+                    {
+
+                        this.board.move(i, j + 1, this.board.tile(i, j));
+                        changed = true;
+                        Tile t = this.tile(i,j);
+                        t.equals(t);
+                    */
+//top to bottom, incrementing empty tile count
+
 
     /** Checks if the game is over and sets the gameOver variable
      *  appropriately.
@@ -137,7 +204,21 @@ public class Model extends Observable {
      *  Empty spaces are stored as null.
      * */
     public static boolean emptySpaceExists(Board b) {
-        // TODO: Fill in this function.
+
+        //keeping track of the columns
+        for (int i = 0; i < b.size(); i++)
+        {
+            //keeping track of rows
+            for (int j = 0; j < b.size(); j++)
+            {
+                if (b.tile(i,j) == null)
+                {
+                    return true;
+                }
+
+            }
+        }
+
         return false;
     }
 
@@ -147,7 +228,20 @@ public class Model extends Observable {
      * given a Tile object t, we get its value with t.value().
      */
     public static boolean maxTileExists(Board b) {
-        // TODO: Fill in this function.
+        //keeping track of the columns
+        for (int row = 0; row < b.size(); row++)
+        {
+            //keeping track of rows
+            for (int col = 0; col < b.size(); col++)
+            {
+                if (b.tile(col,row) != null && b.tile(col,row).value() == MAX_PIECE)
+                {
+                    return true;
+                }
+
+            }
+        }
+
         return false;
     }
 
@@ -158,7 +252,45 @@ public class Model extends Observable {
      * 2. There are two adjacent tiles with the same value.
      */
     public static boolean atLeastOneMoveExists(Board b) {
-        // TODO: Fill in this function.
+        int dataTracker;
+        if(emptySpaceExists(b))
+       {
+           return true;
+       }
+
+       //keeping track of columns
+
+        for (int row = 0; row < b.size(); row++)
+        {
+            //keeping track of rows
+            for (int col = 0; col < b.size(); col++)
+            {
+               dataTracker = b.tile(col,row).value();
+               if(col + 1 < b.size())
+               {
+                   //Seems to be that it is going out of range here...
+                   //Solution may be to check both up and right, unless up or right is out of range...
+                   if (b.tile(col + 1, row).value() == dataTracker)
+                   {
+                       return  true;
+                   }
+
+               }
+
+               if(row + 1 < b.size())
+                {
+                    //Seems to be that it is going out of range here...
+                    //Solution may be to check both up and right, unless up or right is out of range...
+                    if (b.tile(col , row+1).value() == dataTracker)
+                    {
+                        return  true;
+                    }
+
+                }
+            }
+
+        }
+
         return false;
     }
 

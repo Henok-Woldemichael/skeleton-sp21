@@ -49,6 +49,7 @@ public class Collatz {
 
         }
         collatz.forEach(result -> System.out.print(result + " "));
+     
 
 
 

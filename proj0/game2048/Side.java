@@ -7,8 +7,11 @@ public enum Side {
      *  symbolic directions, D, below are to be interpreted as follows:
      *     The board's standard orientation has the top of the board
      *     as NORTH, and rows and columns (see Model) are numbered
-     *     from its lower-left corner. Consider the board oriented
-     *     so that side D of the board is farthest from you. Then
+     *     from its lower-left corner.
+     *
+     *     Consider the board oriented
+     *      *     so that side D of the board is farthest from you??
+     *      . Then
      *        * (COL0*s, ROW0*s) are the standard coordinates of the
      *          lower-left corner of the reoriented board (where s is the
      *          board size), and
@@ -53,6 +56,13 @@ public enum Side {
 
     /** Return the standard column number for square (C, R) on a board
      *  of size SIZE oriented with this Side on top. */
+    /*THIS IS ALL YOU NEED, THIS IS WHAT CALCULATES THE FUCKING TILE IF IT WERE NORMALLY ON NORTH BASED ON THE SIDE IT THAT IS ON TOP
+       Dcol,Drow,ColO,RowO are all constants based on the side(South,West etc.) then you just use the row and column it is in using the right col0,RowO,Dcol,Drow
+       You must just use this to re orient the board just act like its in the north position
+     */
+
+    //Just pass in the north or normal coordinates into this and itll give you the south or what ever coordinates
+    //When looping through start from 0,0 obviously, but 0,0 of   South and
     public int col(int c, int r, int size) {
         return col0 * (size - 1) + c * drow + r * dcol;
     }
